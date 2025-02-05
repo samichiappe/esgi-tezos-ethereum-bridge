@@ -1,0 +1,19 @@
+archetype VaultFA2
+
+variable ledger : big_map(address, nat) = {}
+
+entry deposit(user : address, amount : nat) {
+  require(amount > 0, "Amount must be greater than zero");
+  ledger[user] := ledger[user] + amount;
+  emitted Deposit(user, amount);
+}
+
+entry withdraw(user : address, amount : nat) {
+  require(amount > 0, "Amount must be greater than zero");
+  require(ledger[user] >= amount, "Insufficient balance");
+  ledger[user] := ledger[user] - amount;
+  emitted Withdraw(user, amount);
+}
+
+event Deposit(user : address, amount : nat)
+event Withdraw(user : address, amount : nat)
