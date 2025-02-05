@@ -1,0 +1,26 @@
+archetype FA2TokenFA2
+
+variable ledger : big_map(address, nat) = {}
+
+variable totalSupply : nat = 0
+
+entry mint(to : address, amount : nat) {
+  ledger[to] := ledger[to] + amount;
+  totalSupply := totalSupply + amount;
+}
+
+entry burn(from : address, amount : nat) {
+  require(ledger[from] >= amount, "Insufficient balance");
+  ledger[from] := ledger[from] - amount;
+  totalSupply := totalSupply - amount;
+}
+
+entry transfer(from : address, to : address, amount : nat) {
+  require(ledger[from] >= amount, "Insufficient balance");
+  ledger[from] := ledger[from] - amount;
+  ledger[to] := ledger[to] + amount;
+}
+
+entry balance_of(owner : address) : nat {
+  return ledger[owner];
+}
